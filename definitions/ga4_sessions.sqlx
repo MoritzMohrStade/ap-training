@@ -19,7 +19,7 @@ SELECT
     ,user_pseudo_id
     ,array_agg(struct(datetime(timestamp_micros(event_timestamp)) as event_datetime,event_name,(select value.string_value from unnest(event_params) where key = 'page_location') as page_location)ignore nulls) as session_events
     ,array_agg(collected_traffic_source ignore nulls) as session_touchpoints
-
+    ,"tolle zeile" as super_zeile
 from
     ${ref("events_*")}
 where   
