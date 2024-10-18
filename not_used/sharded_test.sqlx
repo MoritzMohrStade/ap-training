@@ -1,0 +1,16 @@
+config {
+    type:"operations",
+    hasOutput: true
+}
+
+create or replace table ${sharded.create("20240917")} as
+SELECT
+  parse_date('%Y%m%d',event_date) as date
+  ,count(distinct (select value.int_value from unnest(event_params) where key = 'ga_session_id')) as sessions
+  ,count(distinct farm_fingerprint(concat(user_pseudo_id, (select value.int_value from unnest(event_params) where key = "ga_session_id")))) as unique_sessions
+  ,count(distinct user_pseudo_id) as unqiue_users
+FROM
+${ref("events_*")}
+  --`artful-shelter-265814.analytics_262445815.events_20240917`
+group by 
+  1

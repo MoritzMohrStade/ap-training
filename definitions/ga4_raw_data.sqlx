@@ -1,0 +1,5 @@
+config {
+    type:"declaration",
+    schema: "analytics_262445815",
+    name: "events_*"
+}

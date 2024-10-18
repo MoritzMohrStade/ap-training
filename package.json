@@ -1,0 +1,7 @@
+{
+    "name": "ap-training",
+    "dependencies":{
+        "@dataform/core":"3.0.0",
+        "dataform-date":"latest"
+    }
+}

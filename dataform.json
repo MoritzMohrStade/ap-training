@@ -1,0 +1,6 @@
+{
+    "defaultSchema":"dataform",
+    "warehouse":"bigquery",
+    "defaultDatabase":"artful-shelter-265814",
+    "defaultLocation": "EU"
+}

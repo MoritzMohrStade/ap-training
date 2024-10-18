@@ -1,0 +1,28 @@
+config {
+    type:"incremental",
+    uniqueKey: ["session_id"],
+    bigquery:{
+        partitionBy: "session_date",
+        updatePartitionFilter:"session_date >= current_date()-4",
+    },
+    assertions:{
+        uniqueKey:["session_id","session_date"]
+    }
+}
+js {
+    const dates = require("dataform-date");
+}
+
+SELECT
+    parse_date('%Y%m%d',event_date) as session_date
+    ,farm_fingerprint(concat(user_pseudo_id, (select value.int_value from unnest(event_params) where key = "ga_session_id"))) as session_id
+    ,user_pseudo_id
+    ,array_agg(struct(datetime(timestamp_micros(event_timestamp)) as event_datetime,event_name,(select value.string_value from unnest(event_params) where key = 'page_location') as page_location)ignore nulls) as session_events
+    ,array_agg(collected_traffic_source ignore nulls) as session_touchpoints
+
+from
+    ${ref("events_*")}
+where   
+    ${dates.range("session_date",-3,-1)}
+group by
+    all
